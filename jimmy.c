@@ -6,7 +6,6 @@ int main(void) {
     CompileParams params = {
         .Flags = WALL | WERROR | WEXTRA,
         .Source = "jimmy.c",
-        .Output = "build"
     };
     Compile(params);
     return 0;

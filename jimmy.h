@@ -160,14 +160,16 @@ bool ValidateCompileParams(CompileParams *params) {
     }
 
     if (params->Output == NULL) {
-        ERROR("Output is missing. Please set CompileParams.Output to the intended output name.\n");
-        return false;
+        PRINT("No output provided, using default target \'build\'\n");
+        params->Output = "build";
+        // ERROR("Output is missing. Please set CompileParams.Output to the intended output name.\n");
     }
     return true;
 }
 
 int Compile(CompileParams params) {
     if (!ValidateCompileParams(&params)) {
+        ERROR("CompilerParams validation failed!\n");
         return 1;
     }
     DEBUG("Using the %s compiler\n", params.PreferredCompiler);
