@@ -37,3 +37,8 @@ compile and run jimmy to compile your program. it's that simple:
 ```sh
 cc jimmy.c -o jimmy && ./jimmy
 ```
+
+# near-future todos
+- [ ] implement `-I`
+- [ ] implement `-L`
+- [ ] implement `-l`
