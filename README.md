@@ -5,9 +5,15 @@ a nobuild c implementation, because build systems suck.
 jimmy is compiled using jimmy, if that has any importance 
 to you
 
+currently supports `gcc`, `clang`, and even `chibicc` and
+`tinycc`, though i haven't tested on macos or windows yet
+
+this project is my simple take on 
+[tsoding's nob](https://github.com/tsoding/nob.h)
+
 # usage
 
-To use jimmy, `#define JIMMY_IMPL` before including 
+to use jimmy, `#define JIMMY_IMPL` before including 
 `jimmy.h`, and simply create a `CompileParams` 
 struct, filling it with your compile options:
 
@@ -24,4 +30,10 @@ int main(void) {
     Compile(params);
     return 0;
 }
+```
+
+compile and run jimmy to compile your program. it's that simple:
+
+```sh
+cc jimmy.c -o jimmy && ./jimmy
 ```
