@@ -24,10 +24,14 @@ void Build() {
         LARGE_INTEGER frequency, start, end;
         QueryPerformanceFrequency(&frequency);
         QueryPerformanceCounter(&start);
-        system("clang src/main.c -o build/main.exe");
+        int errorCode = system("clang src/main.c -o build/main.exe");
         QueryPerformanceCounter(&end);
-        double elapsedMs = (double)(end.QuadPart - start.QuadPart) * 1000.0 / frequency.QuadPart;
-        printf("compiliation finished in %.5f seconds\n", elapsedMs / 1000.0);
+        double elapsedSeconds = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+        if (errorCode != 0) {
+            printf("compilation failed (error code %i)\n", errorCode);
+            return;
+        }
+        printf("compiliation finished in %.5f seconds\n", elapsedSeconds);
 }
 
 int main(int argc, char** argv) {
