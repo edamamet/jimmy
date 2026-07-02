@@ -144,6 +144,10 @@ int main(int argc, char** argv) {
         snprintf(srcPath, sizeof(srcPath), "%s\\jimmy.c", exePath);
         CopyFile(srcPath, "jimmy.c", false);
         printf("injected jimmy.c into the current directory\n");
+    } else if (strcmp(argv[1], "stat") == 0) {
+        Jimmy_StatPath("src/main.c");
+        Jimmy_StatPath("src/");
+        Jimmy_StatPath("moga/");
     } else {
         printf("HOLLUP! %s is not a command\n", argv[1]);
     }
