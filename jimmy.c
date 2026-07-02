@@ -110,24 +110,18 @@ int main(int argc, char** argv) {
     if (strcmp(argv[1], "build") == 0) {
         Build();
     } else if (strcmp(argv[1], "init") == 0) {
-        if (_mkdir("src") != 0) {
+        if (!Jimmy_CreateDir("src")) {
             printf("project is already initialized, aborting\n");
             return 0;
         }
-        FILE *file; 
-        fopen_s(&file, "src/main.c", "wb");
-        if (!file) {
-            printf("unexpected error opening `src/main.c`, aborting\n");
-            return 0;
-        }
-        const char *sourceCode = 
+        const char *sourceCode =
             "#include <stdio.h>\n"
             "\n"
             "int main() {\n"
             "    printf(\"what's up\\n\");\n"
             "}\n";
-        fwrite(sourceCode, 1, strlen(sourceCode), file);
-        printf("project initialized\n");
+        if (Jimmy_CreateFile("src/main.c", sourceCode, strlen(sourceCode), false)) 
+            printf("project initialized\n");
     } else if (strcmp(argv[1], "clean") == 0) {
         system("rmdir /s /q build");
     } else if (strcmp(argv[1], "run") == 0) {
