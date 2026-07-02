@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 void Build() {
         char path[256];
@@ -83,6 +84,15 @@ int main(int argc, char** argv) {
         printf("vendoring is coming soon!");
     } else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0 ) {
         printf("jimmy v0.1beta\n");
+    } else if (strcmp(argv[1], "inject") == 0) {
+        char exePath[256];
+        GetModuleFileName(NULL, exePath, sizeof(exePath));
+        char *lastSlash = strrchr(exePath, '\\');
+        *lastSlash = '\0';
+        char srcPath[280];
+        snprintf(srcPath, sizeof(srcPath), "%s\\jimmy.c", exePath);
+        CopyFile(srcPath, "jimmy.c", false);
+        printf("injected jimmy.c into the current directory\n");
     } else {
         printf("HOLLUP! %s is not a command\n", argv[1]);
     }
