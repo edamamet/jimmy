@@ -71,10 +71,10 @@ int main(int argc, char** argv) {
         fwrite(sourceCode, 1, strlen(sourceCode), file);
         printf("project initialized\n");
     } else if (strcmp(argv[1], "clean") == 0) {
-        _rmdir("build");
+        system("rmdir /s /q build");
     } else if (strcmp(argv[1], "run") == 0) {
         if (_access("build", 0) != 0) {
-            printf("no build to run\n");
+            printf("no build detected (run jimmy build)\n");
             return 0;
         }
         // Build();
