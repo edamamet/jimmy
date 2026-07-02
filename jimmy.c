@@ -77,7 +77,7 @@ void Build() {
         printf("uh oh! clang is not in the PATH. it is required to use jimmy\n");
         return;
     }
-    _mkdir("build");
+    Jimmy_CreateDir("build");
     printf("compiling in release mode\n");
     LARGE_INTEGER frequency, start, end;
     QueryPerformanceFrequency(&frequency);
