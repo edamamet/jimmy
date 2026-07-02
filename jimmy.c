@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
     } else if (strcmp(argv[1], "vendor") == 0) {
         printf("vendoring is coming soon!");
     } else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0 ) {
-        printf("jimmy v0.1beta\n");
+        printf("jimmy v0.2beta\n");
     } else if (strcmp(argv[1], "inject") == 0) {
         char exePath[256];
         GetModuleFileName(NULL, exePath, sizeof(exePath));
