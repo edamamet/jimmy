@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
         // Build();
         system("build\\main.exe");
     } else if (strcmp(argv[1], "vendor") == 0) {
+        printf("vendoring is coming soon!");
     } else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0 ) {
         printf("jimmy v0.1beta\n");
     } else {
