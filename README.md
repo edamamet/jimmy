@@ -24,3 +24,10 @@ jimmy is rather opinionated:
 - `src/` is the source code directory
 - `vendor/` is the directory for third party plugins
 - configured as a unity build (main.c specifically)
+
+### note on ai usage
+this project has 0% ai-generated code; it simply is 
+my exploration into running syscalls from c. 
+
+however! although it is a learning project, i use it
+quite a lot in my other toy projects.
