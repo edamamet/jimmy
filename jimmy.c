@@ -5,6 +5,63 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <sys/stat.h>
+
+void Jimmy_StatPath(const char *path) {
+    struct stat stats;
+    if (stat(path, &stats) != 0) {
+        // return;
+    }
+    printf(
+        "stat result for %s:\n"
+        "    S_IFMT   (type of file):       %s\n"
+        "    S_IFCHR  (character special):  %s\n"
+        "    S_IFREG  (regular):            %s\n"
+        "    S_IFDIR  (directory):          %s\n",
+        path,
+        ((stats.st_mode & S_IFMT) != 0)  ? "ON" : "OFF",
+        ((stats.st_mode & S_IFCHR) != 0) ? "ON" : "OFF",
+        ((stats.st_mode & S_IFREG) != 0) ? "ON" : "OFF",
+        ((stats.st_mode & S_IFDIR) != 0) ? "ON" : "OFF"
+    );
+}
+
+bool Jimmy_DirExists(const char *path) {
+    struct stat stats;
+    if (stat(path, &stats) != 0)
+        return false;
+    return ((stats.st_mode & S_IFDIR) != 0);
+}
+
+bool Jimmy_CreateDir(const char *path) {
+    return _mkdir(path) == 0;
+}
+
+bool Jimmy_FileExists(const char *path) {
+    struct stat stats;
+    if (stat(path, &stats) != 0)
+        return false;
+    return ((stats.st_mode & S_IFREG) != 0);
+}
+
+bool Jimmy_CreateFile(const char *path, const char *data, size_t dataSize, bool force) {
+    if (Jimmy_FileExists(path) && !force)
+        return false;
+    FILE *mainSrc; 
+    fopen_s(&mainSrc, path, "wb");
+    if (mainSrc == NULL) {
+        printf("Failed to create file at %s, aborting\n", path);
+        return false;
+    }
+    if (data != NULL) {
+        fwrite(data, 1, dataSize, mainSrc);
+    }
+    fclose(mainSrc);
+    return true;
+}
+
+void Jimmy_StartTimer() {
+}
 
 void Build() {
     char path[256];
