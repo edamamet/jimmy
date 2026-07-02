@@ -20,6 +20,7 @@ void Build() {
             return;
         }
         _mkdir("build");
+        printf("compiling in release mode\n");
         LARGE_INTEGER frequency, start, end;
         QueryPerformanceFrequency(&frequency);
         QueryPerformanceCounter(&start);
