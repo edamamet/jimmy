@@ -1,0 +1,83 @@
+#include <windows.h>
+#include <direct.h>
+#include <io.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+
+void Build() {
+        char path[256];
+        uint32_t result = SearchPath(
+            NULL,
+            "clang",
+            ".exe",
+            256,
+            path,
+            NULL
+        );
+        if (result == 0) {
+            printf("uh oh! clang is not in the PATH. it is required to use jimmy\n");
+            return;
+        }
+        _mkdir("build");
+        LARGE_INTEGER frequency, start, end;
+        QueryPerformanceFrequency(&frequency);
+        QueryPerformanceCounter(&start);
+        system("clang src/main.c -o build/main.exe");
+        QueryPerformanceCounter(&end);
+        double elapsedMs = (double)(end.QuadPart - start.QuadPart) * 1000.0 / frequency.QuadPart;
+        printf("compiliation finished in %.5f seconds\n", elapsedMs / 1000.0);
+}
+
+int main(int argc, char** argv) {
+    if (argc == 1) {
+        printf(
+                "jimmy, a c build orchestrator\n"
+                "\n"
+                "available commands:\n"
+                "    build     compile the current project\n"
+                "    init      create a new project\n"
+                "    clean     remove the build directory\n"
+                "    run       run the build\n"
+                "    vendor    vendor a package via git\n"
+              );
+        return 0;
+    }
+
+    if (strcmp(argv[1], "build") == 0) {
+        Build();
+    } else if (strcmp(argv[1], "init") == 0) {
+        if (_mkdir("src") != 0) {
+            printf("project is already initialized, aborting\n");
+            return 0;
+        }
+        FILE *file; 
+        fopen_s(&file, "src/main.c", "wb");
+        if (!file) {
+            printf("unexpected error opening `src/main.c`, aborting\n");
+            return 0;
+        }
+        const char *sourceCode = 
+            "#include <stdio.h>\n"
+            "\n"
+            "int main() {\n"
+            "    printf(\"what's up\\n\");\n"
+            "}\n";
+        fwrite(sourceCode, 1, strlen(sourceCode), file);
+        printf("project initialized\n");
+    } else if (strcmp(argv[1], "clean") == 0) {
+        _rmdir("build");
+    } else if (strcmp(argv[1], "run") == 0) {
+        if (_access("build", 0) != 0) {
+            printf("no build to run\n");
+            return 0;
+        }
+        // Build();
+        system("build\\main.exe");
+    } else if (strcmp(argv[1], "vendor") == 0) {
+    } else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0 ) {
+        printf("jimmy v0.1beta\n");
+    } else {
+        printf("HOLLUP! %s is not a command\n", argv[1]);
+    }
+}
