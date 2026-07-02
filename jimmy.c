@@ -7,32 +7,32 @@
 #include <stdbool.h>
 
 void Build() {
-        char path[256];
-        uint32_t result = SearchPath(
+    char path[256];
+    uint32_t result = SearchPath(
             NULL,
             "clang",
             ".exe",
             256,
             path,
             NULL
-        );
-        if (result == 0) {
-            printf("uh oh! clang is not in the PATH. it is required to use jimmy\n");
-            return;
-        }
-        _mkdir("build");
-        printf("compiling in release mode\n");
-        LARGE_INTEGER frequency, start, end;
-        QueryPerformanceFrequency(&frequency);
-        QueryPerformanceCounter(&start);
-        int errorCode = system("clang src/main.c -o build/main.exe");
-        QueryPerformanceCounter(&end);
-        double elapsedSeconds = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
-        if (errorCode != 0) {
-            printf("compilation failed (error code %i)\n", errorCode);
-            return;
-        }
-        printf("compiliation finished in %.5f seconds\n", elapsedSeconds);
+            );
+    if (result == 0) {
+        printf("uh oh! clang is not in the PATH. it is required to use jimmy\n");
+        return;
+    }
+    _mkdir("build");
+    printf("compiling in release mode\n");
+    LARGE_INTEGER frequency, start, end;
+    QueryPerformanceFrequency(&frequency);
+    QueryPerformanceCounter(&start);
+    int errorCode = system("clang src/main.c -o build/main.exe");
+    QueryPerformanceCounter(&end);
+    double elapsedSeconds = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+    if (errorCode != 0) {
+        printf("compilation failed (error code %i)\n", errorCode);
+        return;
+    }
+    printf("compiliation finished in %.5f seconds\n", elapsedSeconds);
 }
 
 int main(int argc, char** argv) {
