@@ -168,7 +168,13 @@ void Platform_ReplaceProcess(const char *binPath, char *cmdline) {
 #endif
 
 const char *Jimmy_DefaultConfigCode = 
-    "// #define JIMMY_LOG_INFO  // enables [Info] logs";
+"#define JIMMY_LOG_INFO      // enables [Info] logs (there's quite a lot of them!)\n"
+"\n" 
+"#define JIMMY_AUTO_REBUILD  // auto-rebuild jimmy on detected changes\n"
+"                            //     occassionally faster start-up times,\n"  
+"                            //     but you'll need to manually recompile\n"
+"                            //     jimmy when editing the project (including\n"
+"                            //     this config file!)";
 
 void Jimmy_RebuildSelf(int argc, char **argv) {
     char *thisBinPath = argv[0];
