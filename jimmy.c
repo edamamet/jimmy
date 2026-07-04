@@ -331,7 +331,7 @@ void PrintHelp() {
 
 int main(int argc, char** argv) {
     Platform_InitConsole();
-#ifdef JIMMY_NO_AUTO_REBUILD
+#ifndef JIMMY_NO_AUTO_REBUILD
     Jimmy_RebuildSelf(argc, argv);
 #endif
     if (argc == 1 || strcmp(argv[1], "--help") == 0) {
