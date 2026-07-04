@@ -205,7 +205,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
         return;
     }
 
-    INFO("REBUILDING...\n");
+    printf("changes to project detected, rebuilding self...\n");
     if (!Platform_RenameFile(thisBinPath, oldBinPath)) {
         printf("failed to rename %s to %s, aborting\n", thisBinPath, oldBinPath);
         return;
