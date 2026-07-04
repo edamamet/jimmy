@@ -168,7 +168,7 @@ void Platform_ReplaceProcess(const char *binPath, char *cmdline) {
 #endif
 
 const char *Jimmy_DefaultConfigCode = 
-    "#define JIMMY_LOG_INFO  // enables [Info] logs";
+    "// #define JIMMY_LOG_INFO  // enables [Info] logs";
 
 void Jimmy_RebuildSelf(int argc, char **argv) {
     char *thisBinPath = argv[0];
