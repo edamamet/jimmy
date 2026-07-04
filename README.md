@@ -1,6 +1,6 @@
 # jimmy
 
-a nobuild c build system.
+a nob-inspired c build system.
 
 > [!NOTE]
 > This currently only works on windows and with clang
