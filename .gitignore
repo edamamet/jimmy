@@ -2,3 +2,4 @@
 *.pdb
 *.rdi
 src/
+jimmy_config.h
