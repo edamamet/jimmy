@@ -265,6 +265,19 @@ void Jimmy_Clean() {
     Platform_RemoveDir("build");
 }
 void Jimmy_Run() { 
+    INFO("=== Jimmy_Run ===\n");
+    if (!Platform_DirExists("src")) {
+        Jimmy_Build();
+    }
+    u64 srcTime = Platform_GetFileLastWriteTime("src/");
+    u64 buildTime = Platform_GetFileLastWriteTime("build/main.exe");
+    INFO("comparing edit times:\n");
+    INFO("    src/             %zu\n", srcTime);
+    INFO("    build/main.exe   %zu\n", buildTime);
+    if (srcTime > buildTime) {
+        INFO("auto compilation triggered\n");
+        Jimmy_Build();
+    }
     Platform_ExecuteShell("build/main.exe");
 }
 void Jimmy_Vendor() { 
