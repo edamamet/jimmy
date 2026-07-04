@@ -222,7 +222,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
     }
 
     char cmdline[512];
-    size_t pos = 0;
+    size_t pos = snprintf(cmdline, sizeof(cmdline), "\"%s\"", thisBinPath);
     for (int i = 1; i < argc; i++) {
         int len = snprintf(cmdline + pos, sizeof(cmdline) - pos, " \"%s\"", argv[i]);
         pos += len;
