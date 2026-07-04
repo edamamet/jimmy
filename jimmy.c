@@ -177,6 +177,7 @@ const char *Jimmy_DefaultConfigCode =
 "                            //     this config file!)";
 
 void Jimmy_RebuildSelf(int argc, char **argv) {
+    INFO("=== Jimmy_RebuildSelf ===\n");
     char *thisBinPath = argv[0];
     INFO("checking rebuild conditions...\n");
     char oldBinPath[256];
@@ -231,6 +232,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
 }
 
 void Jimmy_Build() { 
+    INFO("=== Jimmy_Build ===\n");
     if (!Platform_FileExists("src/main.c")) {
         printf("src/main.c does not exist, aborting\n");
         return;
@@ -245,6 +247,7 @@ void Jimmy_Build() {
     }
 }
 void Jimmy_Init() { 
+    INFO("=== Jimmy_Init ===\n");
     if (Platform_DirExists("src")) {
         if (!Platform_FileExists("jimmy_config.h")) {
             printf("restoring jimmy_config.h\n");
@@ -262,6 +265,7 @@ void Jimmy_Init() {
     printf("project initialized");
 }
 void Jimmy_Clean() { 
+    INFO("=== Jimmy_Clean ===\n");
     Platform_RemoveDir("build");
 }
 void Jimmy_Run() { 
@@ -281,9 +285,11 @@ void Jimmy_Run() {
     Platform_ExecuteShell("build/main.exe");
 }
 void Jimmy_Vendor() { 
+    INFO("=== Jimmy_Vendor ===\n");
     printf("vendoring coming soon(tm)\n");
 }
 void Jimmy_Check() { 
+    INFO("=== Jimmy_Check ===\n");
     printf("checking shell capabilities...\n");
     bool clangAvail = Platform_ShellCommandExists("clang");
     bool tinyccAvail = Platform_ShellCommandExists("tcc");
