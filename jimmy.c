@@ -189,8 +189,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
 
     u64 jimmyTime = Platform_GetFileLastWriteTime(thisBinPath);
     if (jimmyTime == 0) {
-        // printf("could not query self (%s), aborting\n", thisBinPath);
-        printf("welcome back?\n");
+        printf("could not query self (%s), aborting\n", thisBinPath);
         return;
     }
     u64 configTime = Platform_GetFileLastWriteTime("jimmy_config.h");
