@@ -10,7 +10,7 @@ a nobuild c build system.
 ## usage
 to use jimmy, simply compile jimmy.c and run it. that's it. no bs.
 ```sh
-clang ./jimmy.c -o jimmy.exe
+clang jimmy.c -o jimmy.exe
 ./jimmy.exe
 
 # jimmy, a c build orchestrator
