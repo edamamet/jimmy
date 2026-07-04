@@ -238,6 +238,11 @@ void Jimmy_Build() {
 }
 void Jimmy_Init() { 
     if (Platform_DirExists("src")) {
+        if (!Platform_FileExists("jimmy_config.h")) {
+            printf("restoring jimmy_config.h\n");
+            Platform_CreateFile("jimmy_config.h");
+            Platform_WriteToFile("jimmy_config.h", Jimmy_DefaultConfigCode);
+        }
         printf("project already initialized, aborting\n");
         return;
     } 
