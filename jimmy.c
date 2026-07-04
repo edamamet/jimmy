@@ -87,8 +87,8 @@ bool Platform_DirExists(const char *path) {
     return ((attribs & FILE_ATTRIBUTE_DIRECTORY) != 0);
 }
 void Platform_CreateDir(const char *path) {
-    _mkdir(path);
-    INFO("created directory %s/\n", path);
+    if (_mkdir(path) == 0)
+        INFO("created directory %s/\n", path);
 } void Platform_RemoveDir(const char *path) {
     _rmdir(path);
     INFO("removed directory %s/\n", path);
