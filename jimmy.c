@@ -20,6 +20,7 @@ static inline void Jimmy_ConsumeFmt(const char *fmt, ...) { (void)fmt; }
 
 extern const char *Platform_DefaultMainSourceCode;
 
+void Platform_InitConsole();
 bool Platform_FileExists(const char *path);
 void Platform_CreateFile(const char *path);
 void Platform_WriteToFile(const char *path, const char *contents);
@@ -37,7 +38,9 @@ void Platform_ReplaceProcess(const char *binPath, char *cmdline);
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <direct.h>
-
+void Platform_InitConsole(void) {
+    SetConsoleOutputCP(CP_UTF8);
+}
 const char *Platform_DefaultMainSourceCode =
     "#pragma comment(linker, \"/subsystem:console\")\n"
     "#include <stdio.h>\n"
@@ -322,6 +325,7 @@ void PrintHelp() {
 
 int main(int argc, char** argv) {
 #ifdef JIMMY_AUTO_REBUILD
+    Platform_InitConsole();
     Jimmy_RebuildSelf(argc, argv);
 #endif
     if (argc == 1 || strcmp(argv[1], "--help") == 0) {
