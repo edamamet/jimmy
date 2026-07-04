@@ -7,7 +7,7 @@ a nobuild c build system.
 >
 > linux and macos will come dw i use them too
 
-to use jimmy, simply include jimmy.c in your project and run it. that's it. no bs.
+to use jimmy, simply compile jimmy.c and run it. that's it. no bs.
 ```sh
 clang ./jimmy.c -o jimmy.exe
 ./jimmy.exe
