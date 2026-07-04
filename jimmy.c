@@ -324,7 +324,7 @@ int main(int argc, char** argv) {
 #ifdef JIMMY_AUTO_REBUILD
     Jimmy_RebuildSelf(argc, argv);
 #endif
-    if (argc == 1) {
+    if (argc == 1 || strcmp(argv[1], "--help") == 0) {
         PrintHelp();
         return 0;
     }
