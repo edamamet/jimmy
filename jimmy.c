@@ -241,6 +241,7 @@ void Jimmy_Build() {
         printf("compilation complete\n");
     } else {
         printf("compilation failed\n");
+        exit(errorCode);
     }
 }
 void Jimmy_Init() { 
