@@ -316,7 +316,9 @@ void PrintHelp() {
 }
 
 int main(int argc, char** argv) {
+#ifdef JIMMY_AUTO_REBUILD
     Jimmy_RebuildSelf(argc, argv);
+#endif
     if (argc == 1) {
         PrintHelp();
         return 0;
