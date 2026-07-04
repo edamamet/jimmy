@@ -264,7 +264,12 @@ void Jimmy_Init() {
     Platform_WriteToFile("src/main.c", Platform_DefaultMainSourceCode);
     Platform_CreateFile("jimmy_config.h");
     Platform_WriteToFile("jimmy_config.h", Jimmy_DefaultConfigCode);
-    printf("project initialized");
+    printf(
+        "project initialized\n"
+        "├── src/\n"
+        "│   └── main.c\n"
+        "└── jimmy_config.h"
+    );
 }
 void Jimmy_Clean() { 
     INFO("=== Jimmy_Clean ===\n");
