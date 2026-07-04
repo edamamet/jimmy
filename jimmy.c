@@ -172,12 +172,11 @@ void Platform_ReplaceProcess(const char *binPath, char *cmdline) {
 
 const char *Jimmy_DefaultConfigCode = 
 "// #define JIMMY_LOG_INFO         // enables [Info] logs (there's quite a lot of them!)\n"
-"\n" 
-"// #define JIMMY_NO_AUTO_REBUILD  // auto-rebuild jimmy on detected changes\n"
-"                                  //     occassionally faster start-up times,\n"  
-"                                  //     but you'll need to manually recompile\n"
-"                                  //     jimmy when editing the project (including\n"
-"                                  //     this config file!)";
+"\n"
+"// #define JIMMY_NO_AUTO_REBUILD  // disables auto rebuilding\n"
+"                                  //     faster startup times, but you'll\n"
+"                                  //     have to manually recompile jimmy \n"
+"                                  //     to apply config/project changes";
 
 void Jimmy_RebuildSelf(int argc, char **argv) {
     INFO("=== Jimmy_RebuildSelf ===\n");
