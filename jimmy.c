@@ -230,6 +230,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
         int len = snprintf(cmdline + pos, sizeof(cmdline) - pos, " \"%s\"", argv[i]);
         pos += len;
     }
+    printf("rebuild succeeded, relaunching...\n");
     Platform_ReplaceProcess(thisBinPath, cmdline);
 }
 
