@@ -338,7 +338,7 @@ int main(int argc, char** argv) {
     } else if (strcmp(command, "check") == 0) {
         Jimmy_Check();
     } else if (strcmp(command, "--version") == 0) {
-        printf("jimmy v0.3beta");
+        printf("jimmy v0.4beta");
     } else {
         printf("unknown command %s\n", command);
     }
