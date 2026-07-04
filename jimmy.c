@@ -7,7 +7,7 @@
 #define INFO(s, ...) printf("[INFO] "s, __VA_ARGS__)
 #else
 static inline void Jimmy_ConsumeFmt(const char *fmt, ...) { (void)fmt; }
-#define INFO(s, ...) Jimmy_ConsumeFmt(s, __VA_ARGS__)
+#define INFO(s, ...) Jimmy_ConsumeFmt(s, ##__VA_ARGS__)
 #endif
 
 #include <stdio.h>
@@ -168,6 +168,7 @@ void Platform_ReplaceProcess(const char *binPath, char *cmdline) {
     exit(code);
 }
 #else
+#include <string.h>
 #endif
 
 const char *Jimmy_DefaultConfigCode = 
