@@ -316,7 +316,7 @@ void PrintHelp() {
         "    clean     remove the build directory\n"
         "    run       run the build\n"
         "    vendor    vendor a package via git\n"
-        "    check     evaluate if jimmy can properly\n"
+        "    check     evaluate if jimmy can run properly\n"
     );
 }
 
