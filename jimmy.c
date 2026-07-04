@@ -46,7 +46,7 @@ const char *Platform_DefaultMainSourceCode =
     "#include <stdio.h>\n"
     "\n"
     "int main() {\n"
-    "   printf(\"what's up\n\");\n"
+    "   printf(\"what's up\\n\");\n"
     "}";
 
 void Win32_StatPath(const char *path) {
