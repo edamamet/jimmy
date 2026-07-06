@@ -3,8 +3,9 @@
 #else
 #endif
 
+#define JIMMY_LOG_INFO
 #ifdef JIMMY_LOG_INFO
-#define INFO(s, ...) printf("[INFO] "s, __VA_ARGS__)
+#define INFO(s, ...) printf("[INFO] "s, ##__VA_ARGS__)
 #else
 static inline void Jimmy_ConsumeFmt(const char *fmt, ...) { (void)fmt; }
 #define INFO(s, ...) Jimmy_ConsumeFmt(s, ##__VA_ARGS__)
@@ -32,7 +33,11 @@ void Platform_CreateDir(const char *path);
 void Platform_RemoveDir(const char *path);
 int Platform_ExecuteShell(const char *cmd);
 bool Platform_ShellCommandExists(const char *cmd);
+#ifdef _WIN32
 void Platform_ReplaceProcess(const char *binPath, char *cmdline);
+#else
+void Platform_ReplaceProcess(const char *binPath, char **argv);
+#endif
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -92,9 +97,10 @@ bool Platform_DirExists(const char *path) {
 void Platform_CreateDir(const char *path) {
     if (_mkdir(path) == 0)
         INFO("created directory %s/\n", path);
-} void Platform_RemoveDir(const char *path) {
-    _rmdir(path);
-    INFO("removed directory %s/\n", path);
+} 
+void Platform_RemoveDir(const char *path) {
+    if (_rmdir(path) == 0)
+        INFO("removed directory %s/\n", path);
 }
 bool Platform_FileExists(const char *path) {
     u32 attribs = GetFileAttributes(path);
@@ -169,6 +175,115 @@ void Platform_ReplaceProcess(const char *binPath, char *cmdline) {
 }
 #else
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <ftw.h>
+
+const char *Platform_DefaultMainSourceCode =
+    "#include <stdio.h>\n"
+    "\n"
+    "int main() {\n"
+    "   printf(\"what's up\\n\");\n"
+    "}";
+
+void Platform_InitConsole() {}
+bool Platform_DirExists(const char *path) {
+    struct stat s;
+    bool exists = stat(path, &s);
+    if (exists == false)
+        return false;
+    return (s.st_mode & S_IFDIR) != 0;
+}
+void Platform_CreateDir(const char *path) {
+    if (mkdir(path, 0755) == 0)
+        INFO("created directory %s/\n", path);
+} 
+
+int POSIX_NftwIterationRemove(const char *path, const struct stat *stat, int flag, struct FTW *ftw) {
+    (void)stat;
+    (void)flag;
+    (void)ftw;
+    if (remove(path) != 0) {
+        INFO("failed to remove %s\n", path);
+        return 1;
+    }
+    INFO("removed %s\n", path);
+    return 0;
+}
+
+void Platform_RemoveDir(const char *path) {
+    if (nftw(path, POSIX_NftwIterationRemove, 20, FTW_DEPTH | FTW_PHYS) == 0)
+        INFO("removed directory %s/\n", path);
+}
+bool Platform_FileExists(const char *path) {
+    struct stat s;
+    bool exists = stat(path, &s) == 0;
+    if (exists == false) {
+        INFO("file %s does not exist\n", path);
+        return false;
+    }
+    INFO("file %s exists\n", path);
+    return (s.st_mode & S_IFREG) != 0;
+}
+void Platform_CreateFile(const char *path) {
+    FILE *file = fopen(path, "a");
+    fclose(file);
+    INFO("created file %s/\n", path);
+}
+void Platform_WriteToFile(const char *path, const char *contents) {
+    FILE *file = fopen(path, "wb");
+    int bytesWritten = fprintf(file, "%s", contents);
+    fclose(file);
+    INFO("wrote %i bytes to %s/\n", bytesWritten, path);
+}
+void Platform_RemoveFile(const char *path) {
+    bool success = remove(path);
+    if (success)
+        INFO("deleted file %s/\n", path);
+}
+bool Platform_RenameFile(const char *oldPath, const char *newPath) {
+    return rename(oldPath, newPath) == 0;
+}
+u64 Platform_GetFileLastWriteTime(const char *path) {
+    struct stat s;
+    bool exists = stat(path, &s) == 0;
+    if (exists == false)
+        return 0;
+    return (u64)s.st_mtime;
+}
+int Platform_ExecuteShell(const char *cmd) {
+    return system(cmd);
+}
+bool Platform_ShellCommandExists(const char *cmd) {
+    (void)cmd;
+    const char *envPath = getenv("PATH");
+    if (envPath == NULL) {
+        INFO("Could not find PATH environment variable");
+        return false;
+    }
+    char buffer[4097];
+    snprintf(buffer, sizeof(buffer), "%s", envPath);
+    char *currDir = strtok(buffer, ":");
+    for(;;) {
+        char currPath[1024];
+        snprintf(currPath, sizeof(currPath), "%s/%s", currDir, cmd);
+        INFO("checking %s...\n", currPath);
+        if (access(currPath, F_OK) == 0) {
+            INFO("found! %s...\n", currPath);
+            return true;
+        }
+        currDir = strtok(NULL, ":");
+        if (currDir == NULL)
+            break;
+    }
+    return false;
+}
+void Platform_ReplaceProcess(const char *binPath, char **argv) {
+    if (execv(binPath, argv) == -1)  {
+         printf("failed to create process, aborting\n");
+         exit(1);
+    }
+}
 #endif
 
 const char *Jimmy_DefaultConfigCode = 
@@ -192,16 +307,16 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
 
     u64 jimmyTime = Platform_GetFileLastWriteTime(thisBinPath);
     if (jimmyTime == 0) {
-        printf("could not query self (%s), aborting\n", thisBinPath);
+        printf("could not query self (%s), aborting rebuild process\n", thisBinPath);
         return;
     }
     u64 configTime = Platform_GetFileLastWriteTime("jimmy_config.h");
     u64 mainTime = Platform_GetFileLastWriteTime("src/");
 
     INFO("last build times:\n");
-    INFO("    jimmy      %zu\n", jimmyTime);
-    INFO("    config.h   %zu\n", configTime);
-    INFO("    src/       %zu\n", mainTime);
+    INFO("    jimmy      %llu\n", jimmyTime);
+    INFO("    config.h   %llu\n", configTime);
+    INFO("    src/       %llu\n", mainTime);
 
     if (jimmyTime > configTime && jimmyTime > mainTime) {
         INFO("no need to rebuild :)\n");
@@ -210,7 +325,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
 
     printf("changes to project detected, rebuilding self...\n");
     if (!Platform_RenameFile(thisBinPath, oldBinPath)) {
-        printf("failed to rename %s to %s, aborting\n", thisBinPath, oldBinPath);
+        printf("failed to rename %s to %s, aborting rebuild process\n", thisBinPath, oldBinPath);
         return;
     }
     char command[1024];
@@ -218,20 +333,26 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
     int errorCode = Platform_ExecuteShell(command);
     if (errorCode != 0) {
         if (!Platform_RenameFile(oldBinPath, thisBinPath)) {
-            printf("failed to rename %s to %s, aborting\n", thisBinPath, oldBinPath);
+            printf("failed to rename %s to %s, aborting rebuild process\n", thisBinPath, oldBinPath);
         }
         printf("rebuild failed, aborting\n");
         exit(1);
     }
 
+    printf("rebuild succeeded, relaunching...\n");
+#ifdef _WIN32
     char cmdline[512];
     size_t pos = snprintf(cmdline, sizeof(cmdline), "\"%s\"", thisBinPath);
     for (int i = 1; i < argc; i++) {
         int len = snprintf(cmdline + pos, sizeof(cmdline) - pos, " \"%s\"", argv[i]);
         pos += len;
     }
-    printf("rebuild succeeded, relaunching...\n");
     Platform_ReplaceProcess(thisBinPath, cmdline);
+#else 
+    (void)argc;
+    Platform_ReplaceProcess(thisBinPath, argv);
+#endif
+
 }
 
 void Jimmy_Build() { 
@@ -269,7 +390,7 @@ void Jimmy_Init() {
         "project initialized\n"
         "├── src/\n"
         "│   └── main.c\n"
-        "└── jimmy_config.h"
+        "└── jimmy_config.h\n"
     );
 }
 void Jimmy_Clean() { 
@@ -284,8 +405,8 @@ void Jimmy_Run() {
     u64 srcTime = Platform_GetFileLastWriteTime("src/");
     u64 buildTime = Platform_GetFileLastWriteTime("build/main.exe");
     INFO("comparing edit times:\n");
-    INFO("    src/             %zu\n", srcTime);
-    INFO("    build/main.exe   %zu\n", buildTime);
+    INFO("    src/             %llu\n", srcTime);
+    INFO("    build/main.exe   %llu\n", buildTime);
     if (srcTime > buildTime) {
         INFO("auto compilation triggered\n");
         Jimmy_Build();
