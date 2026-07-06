@@ -281,7 +281,8 @@ bool Platform_ShellCommandExists(const char *cmd) {
     }
     return false;
 }
-void Platform_ReplaceProcess(const char *binPath, char **argv) {
+void Platform_ReplaceProcess(const char *binPath, int argc, char **argv) {
+    (void) argc;
     if (execv(binPath, argv) == -1)  {
          printf("failed to create process, aborting\n");
          exit(1);
