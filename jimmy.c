@@ -33,11 +33,7 @@ void Platform_CreateDir(const char *path);
 void Platform_RemoveDir(const char *path);
 int Platform_ExecuteShell(const char *cmd);
 bool Platform_ShellCommandExists(const char *cmd);
-#ifdef _WIN32
-void Platform_ReplaceProcess(const char *binPath, char *cmdline);
-#else
-void Platform_ReplaceProcess(const char *binPath, char **argv);
-#endif
+void Platform_ReplaceProcess(const char *binPath, int argc, char **argv);
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -159,7 +155,14 @@ bool Platform_ShellCommandExists(const char *cmd) {
     // printf("%s\n", executableName);
     return true;
 }
-void Platform_ReplaceProcess(const char *binPath, char *cmdline) {
+void Platform_ReplaceProcess(const char *binPath, int argc, char **argv) {
+    char cmdline[512];
+    size_t pos = snprintf(cmdline, sizeof(cmdline), "\"%s\"", binPath);
+    for (int i = 1; i < argc; i++) {
+        int len = snprintf(cmdline + pos, sizeof(cmdline) - pos, " \"%s\"", argv[i]);
+        pos += len;
+    }
+
     STARTUPINFO startupInfo = {.cb = sizeof(startupInfo)};
     PROCESS_INFORMATION processInfo = {};
     if (!CreateProcess(binPath, cmdline, NULL, NULL, TRUE, 0, NULL, NULL, &startupInfo, &processInfo)) {
@@ -340,19 +343,7 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
     }
 
     printf("rebuild succeeded, relaunching...\n");
-#ifdef _WIN32
-    char cmdline[512];
-    size_t pos = snprintf(cmdline, sizeof(cmdline), "\"%s\"", thisBinPath);
-    for (int i = 1; i < argc; i++) {
-        int len = snprintf(cmdline + pos, sizeof(cmdline) - pos, " \"%s\"", argv[i]);
-        pos += len;
-    }
-    Platform_ReplaceProcess(thisBinPath, cmdline);
-#else 
-    (void)argc;
-    Platform_ReplaceProcess(thisBinPath, argv);
-#endif
-
+    Platform_ReplaceProcess(thisBinPath, argc, argv);
 }
 
 void Jimmy_Build() { 
