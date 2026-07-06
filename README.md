@@ -3,15 +3,13 @@
 a nob-inspired c build system.
 
 > [!NOTE]
-> This currently only works on windows and with clang
->
-> linux and macos will come dw i use them too
+> This currently only works with the clang compiler for now
 
 ## usage
 to use jimmy, simply compile jimmy.c and run it. that's it. no bs.
 ```sh
-clang jimmy.c -o jimmy.exe
-./jimmy.exe
+clang jimmy.c -o jimmy
+./jimmy
 
 # jimmy, a c build orchestrator
 
