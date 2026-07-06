@@ -5,3 +5,4 @@ src/
 jimmy_config.h
 *.bat
 *.sh
+Makefile
