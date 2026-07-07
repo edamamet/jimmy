@@ -6,7 +6,7 @@ a nob-inspired c build system.
 > This currently only works with the clang compiler for now
 
 ## usage
-to use jimmy, simply compile jimmy.c and run it. that's it. no bs.
+to use jimmy, simply copy jimmy.c to your project, compile jimmy.c and run it. that's it. no bs.
 ```sh
 clang jimmy.c -o jimmy
 ./jimmy
