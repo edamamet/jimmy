@@ -355,7 +355,8 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
         return;
     }
     char command[1024];
-    snprintf(command, sizeof(command), "clang -o %s %s -Werror -Wall -Wextra", thisBinPath, __FILE__);
+    size_t commandLen = snprintf(command, sizeof(command), "clang -o %s %s -Werror -Wall -Wextra", thisBinPath, __FILE__);
+    Platform_FormatDirString(command, commandLen);
     int errorCode = Platform_ExecuteShell(command);
     if (errorCode != 0) {
         if (!Platform_RenameFile(oldBinPath, thisBinPath)) {
@@ -376,7 +377,10 @@ void Jimmy_Build() {
         return;
     }
     Platform_CreateDir("build");
-    int errorCode = Platform_ExecuteShell("clang -o build/main.exe src/main.c -Werror -Wall -Wextra");
+    char buildCmd[512];
+    size_t buildCmdLen = snprintf(buildCmd, sizeof(buildCmd), "clang -o build/main.exe src/main.c -Werror -Wall -Wextra");
+    Platform_FormatDirString(buildCmd, buildCmdLen);
+    int errorCode = Platform_ExecuteShell(buildCmd);
     if (errorCode == 0) {
         printf("compilation complete\n");
     } else {
@@ -425,7 +429,10 @@ void Jimmy_Run() {
         INFO("auto compilation triggered\n");
         Jimmy_Build();
     }
-    Platform_ExecuteShell("build/main.exe");
+    char runCmd[32];
+    size_t runCmdLen = snprintf(runCmd, sizeof(runCmd), "build/main.exe");
+    Platform_FormatDirString(runCmd, runCmdLen);
+    Platform_ExecuteShell(runCmd);
 }
 void Jimmy_Vendor() { 
     INFO("=== Jimmy_Vendor ===\n");
