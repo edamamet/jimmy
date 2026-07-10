@@ -3,7 +3,7 @@
 #else
 #endif
 
-// #define JIMMY_LOG_INFO
+#define JIMMY_LOG_INFO
 #ifdef JIMMY_LOG_INFO
 #define INFO(s, ...) printf("[INFO] "s, ##__VA_ARGS__)
 #else
