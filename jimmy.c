@@ -162,6 +162,7 @@ void Platform_FormatDirString(char *path, size_t size) {
     }
 }
 int Platform_ExecuteShell(const char *cmd) {
+    INFO("executing shell: %s\n", cmd);
     return system(cmd);
 }
 bool Platform_ShellCommandExists(const char *cmd) {
