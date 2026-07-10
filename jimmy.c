@@ -451,15 +451,18 @@ void Jimmy_Check() {
     bool tinyccAvail = Platform_ShellCommandExists("tcc");
     bool cmakeAvail = Platform_ShellCommandExists("cmake");
     bool makeAvail = Platform_ShellCommandExists("make");
+    bool gitAvail = Platform_ShellCommandExists("git");
     printf(
         "    clang:   %s\n"
         "    tinycc:  %s\n"
         "    cmake:   %s\n"
-        "    make:    %s\n",
+        "    make:    %s\n"
+        "    git:    %s\n",
         clangAvail ? "YES" : "NO", 
         tinyccAvail ? "YES" : "NO", 
         cmakeAvail ? "YES" : "NO", 
-        makeAvail ? "YES" : "NO"
+        makeAvail ? "YES" : "NO",
+        gitAvail ? "YES" : "NO"
     );
 }
 
