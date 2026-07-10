@@ -98,8 +98,22 @@ void Platform_CreateDir(const char *path) {
         INFO("created directory %s/\n", path);
 } 
 void Platform_RemoveDir(const char *path) {
-    if (_rmdir(path) == 0)
-        INFO("removed directory %s/\n", path);
+    char doubleTermPath[256];
+    size_t len = snprintf(doubleTermPath, sizeof(doubleTermPath), "%s", path);
+    doubleTermPath[len] = '\0';
+    doubleTermPath[len+1] = '\0';
+    SHFILEOPSTRUCT fileOp = {
+        .wFunc = FO_DELETE,
+        .pFrom = doubleTermPath,
+        .fFlags = FOF_NO_UI,
+    };
+    int success = SHFileOperation(&fileOp);
+    if (success != 0) {
+        if (success != 2)
+            INFO("failed to remove directory %s/: 0x%02X\n", doubleTermPath, success);
+        return;
+    }
+    INFO("removed directory %s/\n", doubleTermPath);
 }
 bool Platform_FileExists(const char *path) {
     u32 attribs = GetFileAttributes(path);
