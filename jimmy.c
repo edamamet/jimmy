@@ -414,6 +414,7 @@ void Jimmy_Init() {
 void Jimmy_Clean() { 
     INFO("=== Jimmy_Clean ===\n");
     Platform_RemoveDir("build");
+    Platform_RemoveDir("vendor");
 }
 void Jimmy_Run() { 
     INFO("=== Jimmy_Run ===\n");
@@ -434,9 +435,14 @@ void Jimmy_Run() {
     Platform_FormatDirString(runCmd, runCmdLen);
     Platform_ExecuteShell(runCmd);
 }
-void Jimmy_Vendor() { 
+void Jimmy_Vendor(const char *gitUrl) { 
     INFO("=== Jimmy_Vendor ===\n");
-    printf("vendoring coming soon(tm)\n");
+    printf("cloning %s...\n", gitUrl);
+    char cmd[128];
+    if (!Platform_DirExists("vendor"))
+        Platform_CreateDir("vendor");
+    snprintf(cmd, sizeof(cmd), "git clone vendor/%s", gitUrl);
+    Platform_ExecuteShell(cmd);
 }
 void Jimmy_Check() { 
     INFO("=== Jimmy_Check ===\n");
@@ -491,7 +497,10 @@ int main(int argc, char** argv) {
     } else if (strcmp(command, "run") == 0) {
         Jimmy_Run();
     } else if (strcmp(command, "vendor") == 0) {
-        Jimmy_Vendor();
+        if (argc == 2) 
+            printf("usage: jimmy vendor [git url]\n");
+        else
+            Jimmy_Vendor(argv[2]);
     } else if (strcmp(command, "check") == 0) {
         Jimmy_Check();
     } else if (strcmp(command, "--version") == 0) {
