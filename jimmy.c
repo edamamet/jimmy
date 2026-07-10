@@ -337,14 +337,14 @@ void Jimmy_RebuildSelf(int argc, char **argv) {
         return;
     }
     u64 configTime = Platform_GetFileLastWriteTime("jimmy_config.h");
-    u64 mainTime = Platform_GetFileLastWriteTime("src/");
+    // u64 mainTime = Platform_GetFileLastWriteTime("src/");
 
     INFO("last build times:\n");
     INFO("    jimmy      %llu\n", jimmyTime);
     INFO("    config.h   %llu\n", configTime);
-    INFO("    src/       %llu\n", mainTime);
+    // INFO("    src/       %llu\n", mainTime);
 
-    if (jimmyTime > configTime && jimmyTime > mainTime) {
+    if (jimmyTime > configTime /*&& jimmyTime > mainTime*/) {
         INFO("no need to rebuild :)\n");
         return;
     }
