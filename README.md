@@ -3,7 +3,10 @@
 a nob-inspired c build system.
 
 > [!NOTE]
-> This currently only works with the clang compiler for now
+> this currently only works with the clang compiler for now
+
+> [!WARNING]
+> jimmy is not feature-complete. don't expect all commands to work just yet
 
 ## usage
 to use jimmy, simply copy jimmy.c to your project, compile jimmy.c and run it. that's it. no bs.
