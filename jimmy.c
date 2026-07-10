@@ -435,15 +435,25 @@ void Jimmy_Run() {
     Platform_FormatDirString(runCmd, runCmdLen);
     Platform_ExecuteShell(runCmd);
 }
+
 void Jimmy_Vendor(const char *gitUrl) { 
     INFO("=== Jimmy_Vendor ===\n");
+    if (!Platform_FileExists(__FILE__)) {
+        printf("not at project root, aborting\n");
+        return;
+    }
+    if (!Platform_DirExists("src/") || !Platform_FileExists("jimmy_config.h")) {
+        printf("project is not initialized\n    hint: run jimmy init\n");
+        return;
+    }
     printf("cloning %s...\n", gitUrl);
     char cmd[128];
     if (!Platform_DirExists("vendor"))
         Platform_CreateDir("vendor");
-    snprintf(cmd, sizeof(cmd), "git clone vendor/%s", gitUrl);
+    snprintf(cmd, sizeof(cmd), "git clone %s vendor/temp --depth 1", gitUrl);
     Platform_ExecuteShell(cmd);
 }
+
 void Jimmy_Check() { 
     INFO("=== Jimmy_Check ===\n");
     printf("checking shell capabilities...\n");
