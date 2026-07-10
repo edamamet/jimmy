@@ -32,6 +32,7 @@ bool Platform_DirExists(const char *path);
 void Platform_CreateDir(const char *path);
 void Platform_RemoveDir(const char *path);
 int Platform_ExecuteShell(const char *cmd);
+void Platform_FormatDirString(char *path, size_t size);
 bool Platform_ShellCommandExists(const char *cmd);
 void Platform_ReplaceProcess(const char *binPath, int argc, char **argv);
 
@@ -39,6 +40,8 @@ void Platform_ReplaceProcess(const char *binPath, int argc, char **argv);
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <direct.h>
+#include <shellapi.h>
+#pragma comment(lib, "shell32.lib")
 void Platform_InitConsole(void) {
     SetConsoleOutputCP(CP_UTF8);
 }
@@ -139,13 +142,13 @@ u64 Platform_GetFileLastWriteTime(const char *path) {
     };
     return writeTime.QuadPart;
 }
-int Platform_ExecuteShell(const char *cmd) {
-    char cmdline[256] = {};
-    int len = snprintf(cmdline, sizeof(cmdline), "%s", cmd);
-    for (int i = 0; i < len; i++) {
-        if (cmdline[i] == '/') cmdline[i] = '\\';
+void Platform_FormatDirString(char *path, size_t size) {
+    for (size_t i = 0; i < size; i++) {
+        if (path[i] == '/') path[i] = '\\';
     }
-    return system(cmdline);
+}
+int Platform_ExecuteShell(const char *cmd) {
+    return system(cmd);
 }
 bool Platform_ShellCommandExists(const char *cmd) {
     char executableName[128];
@@ -253,6 +256,10 @@ u64 Platform_GetFileLastWriteTime(const char *path) {
     if (exists == false)
         return 0;
     return (u64)s.st_mtime;
+}
+void Platform_FormatDirString(char *path, size_t size) {
+    (void) path;
+    (void) size;
 }
 int Platform_ExecuteShell(const char *cmd) {
     return system(cmd);
