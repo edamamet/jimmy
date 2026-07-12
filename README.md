@@ -11,6 +11,7 @@ a nob-inspired c build system.
 ## usage
 to use jimmy, simply copy jimmy.c to your project, compile jimmy.c and run it. that's it. no bs.
 ```sh
+curl -O https://raw.githubusercontent.com/edamamet/jimmy/master/jimmy.c
 clang jimmy.c -o jimmy
 ./jimmy
 
